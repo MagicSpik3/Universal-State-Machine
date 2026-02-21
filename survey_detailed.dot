@@ -1,0 +1,23 @@
+digraph survey {
+  rankdir=LR;
+  node [shape=box, style=filled, fillcolor=lightblue];
+  START [shape=ellipse, fillcolor=lightgreen, label="START"];
+  "BType1" [label="Now, thinking of your [main] job, which one of these best describes your employment situation in this job …\\n[Last time we recorded that you were… (If RBtype1<> empty)]\\n(Guard: (((Wrking == 1) OR (JbAway == 1)) OR (OwnBus == 1))\\nValid: (((BType1 >= 1) AND (BType1 <= 5)) OR (BType1 == -8))\\nFrom: 2204)"];
+  "BType2" [label="Now, thinking of your second job, which one of these best describes your employment situation in this job …\\n[Last time we recorded that you were… (If RBtype2<> empty)]\\n(Guard: ((NumJob >= 2) AND (((Wrking == 1) OR (JbAway == 1)) OR (OwnBus == 1)))\\nValid: (((BType2 >= 1) AND (BType2 <= 5)) OR (BType2 == -8))\\nFrom: 2204)"];
+  "BType3" [label="Now, thinking of your third job, which one of these best describes your employment situation in this job …\\n[Last time we recorded that you were… (If RBtype3<> empty)]\\n(Guard: ((NumJob >= 3) AND (((Wrking == 1) OR (JbAway == 1)) OR (OwnBus == 1)))\\nValid: (((BType3 >= 1) AND (BType3 <= 5)) OR (BType3 == -8))\\nFrom: 2204)"];
+  "BDirNI1" [label="In this job, are your National Insurance contributions deducted at source?\\nLast time we recorded that…\\n(Guard: ((BType1 == 2) OR (BType1 == 3))\\nValid: (((BDirNI1 == 1) OR (BDirNI1 == 2)) OR (BDirNI1 == -8))\\nFrom: 2204)"];
+  "BDirNI2" [label="In this job, are your National Insurance contributions deducted at source?\\nLast time we recorded that…\\n(Guard: ((NumJob >= 2) AND ((BType2 == 2) OR (BType2 == 3)))\\nValid: (((BDirNI2 == 1) OR (BDirNI2 == 2)) OR (BDirNI2 == -8))\\nFrom: 2204)"];
+  "BDirNI3" [label="In this job, are your National Insurance contributions deducted at source?\\nLast time we recorded that…\\n(Guard: ((NumJob >= 3) AND ((BType3 == 2) OR (BType3 == 3)))\\nValid: (((BDirNI3 == 1) OR (BDirNI3 == 2)) OR (BDirNI3 == -8))\\nFrom: 2204)"];
+  "BOwn1" [label="Do you own part of this business?\\n\\n[Last time we recorded that… (if RBOwn1 <> empty)]\\n(Guard: (BType1 == 3)\\nValid: (((BOwn1 == 1) OR (BOwn1 == 2)) OR (BOwn1 == -8))\\nFrom: 2204)"];
+  "BOwn2" [label="Do you own part of this business?\\n\\n[Last time we recorded that… (if RBOwn2 <> empty)]\\n(Guard: ((NumJob >= 2) AND (BType2 == 3))\\nValid: (((BOwn2 == 1) OR (BOwn2 == 2)) OR (BOwn2 == -8))\\nFrom: 2204)"];
+  "BOwn3" [label="Do you own part of this business?\\n\\n[Last time we recorded that… (if RBOwn2 <> empty)]\\n(Guard: ((NumJob >= 3) AND (BType3 == 3))\\nValid: (((BOwn3 == 1) OR (BOwn3 == 2)) OR (BOwn3 == -8))\\nFrom: 2204)"];
+  "BAccsA1" [label="In this business, are annual accounts prepared?\\n\\nINCLUDE IF PREPARED BY ACCOUNTANT\\nLast time we recorded that…\\n(Guard: (((BType1 == 2) OR (BType1 == 4)) OR ((BType1 == 3) AND (BOwn1 == 1)))\\nValid: (((BAccsA1 >= 1) AND (BAccsA1 <= 3)) OR (BAccsA1 == -8))\\nFrom: 2204)"];
+  "BType1" -> "BDirNI1" [label="((BType1 == 2) OR (BType1 == 3))"];
+  "BType2" -> "BDirNI2" [label="((NumJob >= 2) AND ((BType2 == 2) OR ..."];
+  "BType3" -> "BDirNI3" [label="((NumJob >= 3) AND ((BType3 == 2) OR ..."];
+  "BType1" -> "BOwn1" [label="(BType1 == 3)"];
+  "BType2" -> "BOwn2" [label="((NumJob >= 2) AND (BType2 == 3))"];
+  "BType3" -> "BOwn3" [label="((NumJob >= 3) AND (BType3 == 3))"];
+  "BOwn1" -> "BAccsA1" [label="(((BType1 == 2) OR (BType1 == 4)) OR ..."];
+  "BType1" -> "BAccsA1" [label="(((BType1 == 2) OR (BType1 == 4)) OR ..."];
+}

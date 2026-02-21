@@ -1,0 +1,24 @@
+digraph survey {
+  rankdir=LR;
+  node [shape=box, style=filled, fillcolor=lightblue];
+  edge [style=solid];
+  START [shape=ellipse, fillcolor=lightgreen, label="START"];
+  "BType1" [label="Now, thinking of your [main] job, which one of these best describes your employment situation in this job …\\n[Last time we recorded that you were… (If RBtype1<> empty)]"];
+  "BType2" [label="Now, thinking of your second job, which one of these best describes your employment situation in this job …\\n[Last time we recorded that you were… (If RBtype2<> empty)]"];
+  "BType3" [label="Now, thinking of your third job, which one of these best describes your employment situation in this job …\\n[Last time we recorded that you were… (If RBtype3<> empty)]"];
+  "BDirNI1" [label="In this job, are your National Insurance contributions deducted at source?\\nLast time we recorded that…"];
+  "BDirNI2" [label="In this job, are your National Insurance contributions deducted at source?\\nLast time we recorded that…"];
+  "BDirNI3" [label="In this job, are your National Insurance contributions deducted at source?\\nLast time we recorded that…"];
+  "BOwn1" [label="Do you own part of this business?\\n\\n[Last time we recorded that… (if RBOwn1 <> empty)]"];
+  "BOwn2" [label="Do you own part of this business?\\n\\n[Last time we recorded that… (if RBOwn2 <> empty)]"];
+  "BOwn3" [label="Do you own part of this business?\\n\\n[Last time we recorded that… (if RBOwn2 <> empty)]"];
+  "BAccsA1" [label="In this business, are annual accounts prepared?\\n\\nINCLUDE IF PREPARED BY ACCOUNTANT\\nLast time we recorded that…"];
+  "BType1" -> "BDirNI1";
+  "BType2" -> "BDirNI2";
+  "BType3" -> "BDirNI3";
+  "BType1" -> "BOwn1";
+  "BType2" -> "BOwn2";
+  "BType3" -> "BOwn3";
+  "BOwn1" -> "BAccsA1";
+  "BType1" -> "BAccsA1";
+}

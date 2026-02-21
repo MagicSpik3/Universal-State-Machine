@@ -1,0 +1,147 @@
+Check_name,Check_code,Variables
+NetGtGross,"ngtg <- check_data
+  ngtg$grosspay_annual <- ANNUALISE(ngtg$grosspay, ngtg$grosspd)
+  ngtg$netpay_annual <- ANNUALISE(ngtg$netpay, ngtg$netpd)
+  ngtg$ugross_annual <- ANNUALISE(ngtg$ugross, ngtg$upd)
+  ngtg$unett_annual <- ANNUALISE(ngtg$unett, ngtg$upd)
+  ungtg <- ngtg
+    ngtg <- ngtg |> tidytable::filter(grosspay_annual > 0 &
+                      netpay_annual > 0 &
+                      grosspay_annual < netpay_annual)   
+ ungtg <- ungtg |> tidytable::filter(ugross_annual > 0 &
+                       unett_annual > 0 &
+                       (ugross_annual < unett_annual) &
+                       payusl > 1)
+
+  check_data <- tidytable::bind_rows(ngtg, ungtg)","area,address,hhold,person,hserial,newident,wave,sex,dvage,persprox,occt,netpay,netpd,netest,grosspay,grosspd,grossest,payusl,whynousl01,whynousl02,whynousl03,whynousl04,unett,ugross,upd,grosspay_annual,netpay_annual,hout"
+TwiceNetLTGross,"  TwiceNetLTGross <- check_data
+  TwiceNetLTGross$grosspay_annual <-
+    ANNUALISE(TwiceNetLTGross$grosspay, TwiceNetLTGross$grosspd)
+  TwiceNetLTGross$netpay_annual <-
+    ANNUALISE(TwiceNetLTGross$netpay, TwiceNetLTGross$netpd)
+  TwiceNetLTGross$ugross_annual <-
+    ANNUALISE(TwiceNetLTGross$ugross, TwiceNetLTGross$upd)
+  TwiceNetLTGross$unett_annual <-
+    ANNUALISE(TwiceNetLTGross$unett, TwiceNetLTGross$upd)
+  
+  #Create a data frame where cases fail the check
+  TwiceNetLTGross_1 <-
+    TwiceNetLTGross |> tidytable::filter(
+      grosspay_annual > 0 &
+        netpay_annual > 0 &
+        (2 * netpay_annual < grosspay_annual)
+    ) 
+  #This is a check for ugross & unett
+  uTwiceNetLTGross <-
+    TwiceNetLTGross |> tidytable::filter(ugross_annual > 0 &
+                                 unett_annual > 0 &
+                                 (ugross_annual > 2 * unett_annual) &
+                                 payusl > 1)   
+  check_data <- tidytable::bind_rows(TwiceNetLTGross_1, uTwiceNetLTGross)","area,address,hhold,person,hserial,newident,wave,sex,dvage,persprox,occt,netpay,netpd,netest,grosspay,grosspd,grossest,payusl,unett,ugross,upd,grosspay_annual,netpay_annual,hout"
+PayZero,"PayZero <- check_data
+  PayZero$grosspay_annual <-
+    ANNUALISE(PayZero$grosspay, PayZero$grosspd)
+  PayZero$netpay_annual <- ANNUALISE(PayZero$netpay, PayZero$netpd)
+  PayZero$ugross_annual <- ANNUALISE(PayZero$ugross, PayZero$upd)
+  PayZero$unett_annual <- ANNUALISE(PayZero$unett, PayZero$upd)
+  
+  #Create a data frame where cases fail the check
+  PayZero_1 <-
+    PayZero |> tidytable::filter(
+  netpay <= 1 & netpay > 0 |
+        grosspay <= 1 & grosspay > 0
+    )
+  #This is a check for ugross & unett
+  uPayZero <-
+    PayZero |> tidytable::filter(
+      unett <= 1 & unett > 0 |
+       ugross <= 1 & ugross > 0
+    )
+  
+  check_data <- tidytable::bind_rows(PayZero_1, uPayZero)","area,address,hhold,person,hserial,newident,wave,sex,dvage,persprox,occt,netpay,netpd,netest,grosspay,grosspd,grossest,payusl,unett,ugross,upd,grosspay_annual,netpay_annual,hout"
+secondjb,"check_data <- check_data |> 
+    tidytable::filter(sjnet > sjgrs & sjnet > 0 & sjgrs > 0 |
+             sj12n > sj12g & sj12n > 0 & sj12g > 0 |
+             sjsen > sjseg & sjsen > 0 & sjsen > 0)","area,address,hhold,person,hserial,newident,dvage,persprox,sjnet,sjgrs,sj12n,sj12g,sjseg,sjsen,hout"
+SE_NetGtGross,"se_ngtg <- check_data
+  se_ngtg$seamt_annual <- ANNUALISE(se_ngtg$seamt, se_ngtg$seper)
+  se_ngtg$grssemjb_annual <- ANNUALISE(se_ngtg$grssemjb, se_ngtg$grossper)
+  se_ngtg$seaml_annual <- ANNUALISE(se_ngtg$seaml, se_ngtg$sepel)
+
+  # Create a data frame where cases fail the check
+  check_data <- se_ngtg |>
+    tidytable::filter(
+      grssemjb_annual > 0 & seamt_annual > 0 &
+        (grssemjb_annual < seamt_annual) |
+        grseesw < seesw & grseesw > 0 & seesw > 0 |
+        grseesm < seesm & grseesm > 0 & seesm > 0 |
+        seesw > grseesm & seesw > 0 & grseesm > 0 | seesm > grseesw & seesm > 0 & grseesw > 0
+    )","area,address,hhold,person,hserial,newident,wave,sex,dvage,occt,netpay,netpd,grosspay,grosspd,seamt,seper,seamk,seesw,seesm,grssemjb,grossper,grsamk,grseesw,grseesm,seaml,sepel,hout"
+SE_TwiceNetLTGross,"SE_TwiceNetLTGross <- check_data
+  SE_TwiceNetLTGross$seamt_annual <-
+    ANNUALISE(SE_TwiceNetLTGross$seamt, SE_TwiceNetLTGross$seper)
+  SE_TwiceNetLTGross$grssemjb_annual <-
+    ANNUALISE(SE_TwiceNetLTGross$grssemjb, TwiceNetLTGross$grossper)
+  SE_TwiceNetLTGross$seaml_annual <-
+    ANNUALISE(SE_TwiceNetLTGross$seaml, SE_TwiceNetLTGross$sepel)
+  
+  #Create a data frame where cases fail the check
+  check_data <-
+    SE_TwiceNetLTGross |>
+    tidytable::filter(grssemjb_annual > 0 & seamt_annual > 0 & (grssemjb_annual > 2 * seamt_annual))","area,address,hhold,person,hserial,newident,wave,sex,dvage,occt,netpay,netpd,grosspay,grosspd,seamt,seper,grssemjb,grossper,seaml,sepel,hout"
+SE_PayZero,"SE_PayZero <- check_data
+  SE_PayZero$seamt_annual <-
+    ANNUALISE(SE_PayZero$seamt, SE_PayZero$seper)
+  SE_PayZero$grssemjb_annual <-
+    ANNUALISE(SE_PayZero$grssemjb, SE_PayZero$grossper)
+  SE_PayZero$seaml_annual <-
+    ANNUALISE(SE_PayZero$seaml, SE_PayZero$sepel)
+  
+  #Create a data frame where cases fail the check
+  check_data <- SE_PayZero |>
+    tidytable::filter(seamt == 0 | grssemjb == 0)","area,address,hhold,person,hserial,newident,wave,sex,dvage,occt,netpay,netpd,grosspay,grosspd,seamt,seper,grssemjb,grossper,seaml,sepel,hout"
+cbDoubleCount,"df <- check_data |>
+    tidytable::mutate(cbcount = tidytable::case_when(
+      cbenamt != -9 ~ 1,
+      TRUE ~ 0))
+
+  df1 <- df |>
+    tidytable::group_by(hserial) |>
+    tidytable::summarize(cbnum = sum(cbcount))
+
+  df <- tidytable::left_join(df, df1, by = ""hserial"")
+
+  check_data <- df |>
+    tidytable::filter(cbnum > 1)","area,address,hhold,person,hserial,newident,sex,dvage,r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,persprox,cbenblettr,cbenbnkstmt,cbenamt,cbenpd,cbendk,cbtax,cbpaye,cbtaxamt,cbtaxpd,kidben1,kidben2,kidben3,cbchk,hout"
+PIPDLA,"check_data <- check_data |>
+    tidytable::filter((pipmoamt > 0 | pipdlamt > 0) & (dlacramt > 0 | dlamamt > 0))","area,address,hhold,person,hserial,newident,sex,pipdlblettr,pipdlbnkstmt,pipdlamt,pipdlpd,pipdldk,pipmoblettr,pipmobnkstmt,pipmoamt,pipmopd,pipmodk,dlacrblettr,dlacrbnkstmt,dlacramt,dlacrpd,dlacrdk,dlamblettr,dlambnkstmt,dlamamt,dlampd,dlamdk,whrepcar,whredcar,whrepmob,whredmob,disben1,disben2,disben3,disben4,disben5,disben6,disbcdp,cdptype,cdpmota,disbadp,piptype,pipmota,dlatype,dlamota,schedtyp,hout"
+hbnone,"  hb <- check_data |>
+    tidytable::filter(hout < 300 & (housben != 1 & hbamt != -9 | housben == 1 & hbamt < 0))
+  check_data <- hb |>
+    tidytable::filter(hserial %in% check_data$hserial) ","area,address,hhold,person,hserial,newident,month,wave,sex,dvage,ten1,rentexpam,rentexppr,persprox,hbblettr,hbbnkstmt,hbamt,hbpd,hbdk,wageben1,wageben2,wageben3,wageben4,wageben5,wageben6,wageben7,wageben8,wageben9,source,housben,hout"
+HBdouble,"df <- check_data |>
+    tidytable::mutate(hbcount = tidytable::case_when(
+      hbamt > 0 ~ 1,
+      TRUE ~ 0))
+
+  df1 <- df |>
+    tidytable::group_by(hserial) |>
+    tidytable::summarize(hbsum = sum(hbcount))
+
+  df <- tidytable::left_join(df, df1, by = ""hserial"")
+
+  check_data <- df |>
+    tidytable::filter(hbsum > 1)","area,address,hhold,person,hserial,newident,ten1,rentexpam,rentexppr,hbblettr,hbbnkstmt,hbamt,hbpd,hbdk,wageben1,wageben2,wageben3,wageben4,wageben5,wageben6,wageben7,wageben8,wageben9,housben,hout"
+CTCnochild,"check_data <- check_data |>
+    tidytable::filter(numch18 == 0 & ctcamt > 0) ","area,address,hhold,person,hserial,newident,sex,dvage,numchild,numch18,persprox,wrking,jbaway,netpay,netpd,grosspay,wageben1,wageben2,wageben3,wageben4,wageben5,wageben6,wageben7,wageben8,wageben9,ctcblettr,ctcbnkstmt,ctcamt,ctcpd,ctcdk,hout"
+CTCWTC,"df <- check_data
+df$wtcamt_annual <- ANNUALISE(df$wtcamt, df$wtcpd)
+  df$ctcamt_annual <- ANNUALISE(df$ctcamt, df$ctcpd)
+
+  check_data <- df |>
+    tidytable::filter(((wtcamt_annual > 0 & wtcamt_annual < 100) & ctcamt_annual > 100) |
+             ((ctcamt_annual > 0 & ctcamt_annual < 100) & wtcamt_annual > 100) |
+             (wtcamt_annual > 0 & ctcamt_annual > 0 &
+                wtcamt_annual == ctcamt_annual)) ","area,address,hhold,person,hserial,newident,sex,numchild,numch18,persprox,wrking,jbaway,netpay,netpd,grosspay,grosspd,wtcblettr,wtcbnkstmt,wtcamt,wtcpd,wtcdk,ctcblettr,ctcbnkstmt,ctcamt,ctcpd,ctcdk,wtcd,cctc,combam,combpd,wageben1,wageben2,wageben3,wageben4,wageben5,wageben6,wageben7,wageben8,wageben9,wtc,ctc,hout"
+LoanRepayMultiple,"check_data <- check_data |>
+    tidytable::filter(allrepay > 1)","area,address,hhold,person,hserial,newident,uniamt,unipd,insupamt,insuppd,jsaamt,jsapd,esaamt,esapd,pcredamt,pcredpd,sfrepay,repayamt,sfinc,hout"
