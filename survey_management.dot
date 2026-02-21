@@ -19,6 +19,6 @@ digraph survey {
   "BType1" -> "BOwn1";
   "BType2" -> "BOwn2";
   "BType3" -> "BOwn3";
-  "BOwn1" -> "BAccsA1";
   "BType1" -> "BAccsA1";
+  "BOwn1" -> "BAccsA1";
 }

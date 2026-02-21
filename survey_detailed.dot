@@ -18,6 +18,6 @@ digraph survey {
   "BType1" -> "BOwn1" [label="(BType1 == 3)"];
   "BType2" -> "BOwn2" [label="((NumJob >= 2) AND (BType2 == 3))"];
   "BType3" -> "BOwn3" [label="((NumJob >= 3) AND (BType3 == 3))"];
-  "BOwn1" -> "BAccsA1" [label="(((BType1 == 2) OR (BType1 == 4)) OR ..."];
   "BType1" -> "BAccsA1" [label="(((BType1 == 2) OR (BType1 == 4)) OR ..."];
+  "BOwn1" -> "BAccsA1" [label="(((BType1 == 2) OR (BType1 == 4)) OR ..."];
 }
