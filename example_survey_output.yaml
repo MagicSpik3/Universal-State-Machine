@@ -1,0 +1,479 @@
+blocks:
+- name: JobBlock
+  parameters:
+  - job_index
+  state_ids:
+  - BType
+  - BDirNI
+  - BOwn
+  - BAccsA
+metadata: {}
+name: Example Job Survey
+states:
+- block: JobBlock
+  entry_guard:
+    left:
+      left:
+        left:
+          name: Wrking
+          type: var
+        operator: ==
+        right:
+          type: lit
+          value: 1
+        type: binary
+      operator: OR
+      right:
+        left:
+          name: JbAway
+          type: var
+        operator: ==
+        right:
+          type: lit
+          value: 1
+        type: binary
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: OwnBus
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 1
+      type: binary
+    type: binary
+  id: BType1
+  text: Employment type for job 1
+  validation:
+    left:
+      left:
+        left:
+          name: BType1
+          type: var
+        operator: '>='
+        right:
+          type: lit
+          value: 1
+        type: binary
+      operator: AND
+      right:
+        left:
+          name: BType1
+          type: var
+        operator: <=
+        right:
+          type: lit
+          value: 5
+        type: binary
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType1
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: -8
+      type: binary
+    type: binary
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      left:
+        name: BType1
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 2
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType1
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 3
+      type: binary
+    type: binary
+  id: BDirNI1
+  text: National Insurance deducted at source for job 1
+  validation: null
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      name: BType1
+      type: var
+    operator: ==
+    right:
+      type: lit
+      value: 3
+    type: binary
+  id: BOwn1
+  text: Do you own part of this business for job 1
+  validation: null
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      left:
+        left:
+          name: Wrking
+          type: var
+        operator: ==
+        right:
+          type: lit
+          value: 1
+        type: binary
+      operator: OR
+      right:
+        left:
+          name: JbAway
+          type: var
+        operator: ==
+        right:
+          type: lit
+          value: 1
+        type: binary
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: OwnBus
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 1
+      type: binary
+    type: binary
+  id: BType2
+  text: Employment type for job 2
+  validation:
+    left:
+      left:
+        left:
+          name: BType2
+          type: var
+        operator: '>='
+        right:
+          type: lit
+          value: 1
+        type: binary
+      operator: AND
+      right:
+        left:
+          name: BType2
+          type: var
+        operator: <=
+        right:
+          type: lit
+          value: 5
+        type: binary
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType2
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: -8
+      type: binary
+    type: binary
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      left:
+        name: BType2
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 2
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType2
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 3
+      type: binary
+    type: binary
+  id: BDirNI2
+  text: National Insurance deducted at source for job 2
+  validation: null
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      name: BType2
+      type: var
+    operator: ==
+    right:
+      type: lit
+      value: 3
+    type: binary
+  id: BOwn2
+  text: Do you own part of this business for job 2
+  validation: null
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      left:
+        left:
+          name: Wrking
+          type: var
+        operator: ==
+        right:
+          type: lit
+          value: 1
+        type: binary
+      operator: OR
+      right:
+        left:
+          name: JbAway
+          type: var
+        operator: ==
+        right:
+          type: lit
+          value: 1
+        type: binary
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: OwnBus
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 1
+      type: binary
+    type: binary
+  id: BType3
+  text: Employment type for job 3
+  validation:
+    left:
+      left:
+        left:
+          name: BType3
+          type: var
+        operator: '>='
+        right:
+          type: lit
+          value: 1
+        type: binary
+      operator: AND
+      right:
+        left:
+          name: BType3
+          type: var
+        operator: <=
+        right:
+          type: lit
+          value: 5
+        type: binary
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType3
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: -8
+      type: binary
+    type: binary
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      left:
+        name: BType3
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 2
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType3
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 3
+      type: binary
+    type: binary
+  id: BDirNI3
+  text: National Insurance deducted at source for job 3
+  validation: null
+  version:
+    apply_from: 2204
+    apply_to: null
+- block: JobBlock
+  entry_guard:
+    left:
+      name: BType3
+      type: var
+    operator: ==
+    right:
+      type: lit
+      value: 3
+    type: binary
+  id: BOwn3
+  text: Do you own part of this business for job 3
+  validation: null
+  version:
+    apply_from: 2204
+    apply_to: null
+transitions:
+- from_state: START
+  guard: null
+  to_state: BType1
+- from_state: BType1
+  guard:
+    left:
+      left:
+        name: BType1
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 2
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType1
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 3
+      type: binary
+    type: binary
+  to_state: BDirNI1
+- from_state: BType1
+  guard:
+    left:
+      name: BType1
+      type: var
+    operator: ==
+    right:
+      type: lit
+      value: 3
+    type: binary
+  to_state: BOwn1
+- from_state: BType2
+  guard:
+    left:
+      left:
+        name: BType2
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 2
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType2
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 3
+      type: binary
+    type: binary
+  to_state: BDirNI2
+- from_state: BType2
+  guard:
+    left:
+      name: BType2
+      type: var
+    operator: ==
+    right:
+      type: lit
+      value: 3
+    type: binary
+  to_state: BOwn2
+- from_state: BType3
+  guard:
+    left:
+      left:
+        name: BType3
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 2
+      type: binary
+    operator: OR
+    right:
+      left:
+        name: BType3
+        type: var
+      operator: ==
+      right:
+        type: lit
+        value: 3
+      type: binary
+    type: binary
+  to_state: BDirNI3
+- from_state: BType3
+  guard:
+    left:
+      name: BType3
+      type: var
+    operator: ==
+    right:
+      type: lit
+      value: 3
+    type: binary
+  to_state: BOwn3
+variables:
+- data_type: null
+  description: Currently working
+  name: Wrking
+- data_type: null
+  description: Job away flag
+  name: JbAway
+- data_type: null
+  description: Owns a business
+  name: OwnBus
+- data_type: null
+  description: Number of jobs
+  name: NumJob

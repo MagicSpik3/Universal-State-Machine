@@ -1,0 +1,26 @@
+variable,question,route,valid_response,multi,max_choices,apply_from
+BType1,"Now, thinking of your [main] job, which one of these best describes your employment situation in this job …
+[Last time we recorded that you were… (If RBtype1<> empty)]",(Wrking == 1 | JbAway == 1 | OwnBus == 1),((BType1 >= 1 & BType1 <=5) | BType1 == -8),,,2204
+BType2,"Now, thinking of your second job, which one of these best describes your employment situation in this job …
+[Last time we recorded that you were… (If RBtype2<> empty)]",(NumJob >=2 & (Wrking == 1 | JbAway == 1 | OwnBus == 1)),((BType2 >= 1 & BType2 <=5) | BType2 == -8),,,2204
+BType3,"Now, thinking of your third job, which one of these best describes your employment situation in this job …
+[Last time we recorded that you were… (If RBtype3<> empty)]",(NumJob >=3 & (Wrking == 1 | JbAway == 1 | OwnBus == 1)),((BType3 >= 1 & BType3 <=5) | BType3 == -8),,,2204
+BDirNI1,"In this job, are your National Insurance contributions deducted at source?
+Last time we recorded that…",(BType1 == 2 | BType1 == 3),(BDirNI1 == 1 | BDirNI1 == 2 | BDirNI1 == -8),,,2204
+BDirNI2,"In this job, are your National Insurance contributions deducted at source?
+Last time we recorded that…",(NumJob >=2 & (BType2 == 2 | BType2 == 3)),(BDirNI2 == 1 | BDirNI2== 2 | BDirNI2 == -8),,,2204
+BDirNI3,"In this job, are your National Insurance contributions deducted at source?
+Last time we recorded that…",(NumJob >=3 & (BType3 == 2 | BType3 == 3)),(BDirNI3 == 1 | BDirNI3 == 2 | BDirNI3 == -8),,,2204
+BOwn1,"Do you own part of this business?
+
+[Last time we recorded that… (if RBOwn1 <> empty)]",(BType1 == 3),(BOwn1 == 1 | BOwn1 == 2 | BOwn1 == -8),,,2204
+BOwn2,"Do you own part of this business?
+
+[Last time we recorded that… (if RBOwn2 <> empty)]",(NumJob >=2 & BType2 == 3),(BOwn2 == 1 | BOwn2 == 2 | BOwn2 == -8),,,2204
+BOwn3,"Do you own part of this business?
+
+[Last time we recorded that… (if RBOwn2 <> empty)]",(NumJob >=3 & BType3 == 3),(BOwn3 == 1 | BOwn3 == 2 | BOwn3 == -8),,,2204
+BAccsA1,"In this business, are annual accounts prepared?
+
+INCLUDE IF PREPARED BY ACCOUNTANT
+Last time we recorded that…",((BType1 == 2 | BType1 == 4) | (BType1 == 3 & BOwn1 == 1)),((BAccsA1 >=1 & BAccsA1 <= 3) | BAccsA1 == -8),,,2204
