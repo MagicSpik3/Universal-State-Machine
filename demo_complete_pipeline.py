@@ -15,7 +15,7 @@ from cslm.backends import generate_dot, save_dot_file, DotMode
 
 
 def main():
-    csv_path = "/home/jonny/git/Universal-State-Machine/example_survey.csv"
+    csv_path = "/home/jonny/git/Universal-State-Machine/question_route.csv"
     
     print("=" * 80)
     print("COMPLETE PIPELINE DEMO: CSV → CSLM → Analysis → Diagrams")

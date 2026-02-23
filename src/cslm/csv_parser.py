@@ -26,6 +26,8 @@ from cslm.expressions import (
     VariableReference,
     Literal,
     UnaryExpression,
+    UnaryOperator,
+    FunctionCall,
 )
 
 
@@ -41,6 +43,7 @@ def normalize_expression_syntax(expr_str: str) -> Expression:
     Converts:
         & → AND
         | → OR
+        ! → NOT
         == → EQUALS (already compatible)
         != → NOT_EQUALS
         < → LESS_THAN
@@ -64,10 +67,11 @@ def normalize_expression_syntax(expr_str: str) -> Expression:
     expr_str = expr_str.strip()
     expr_str = re.sub(r'\s+', ' ', expr_str)  # Collapse multiple spaces
     
-    # Replace & with AND, | with OR (carefully to preserve == and !=)
-    # Use word boundaries or lookahead/lookbehind to avoid mangling == operators
+    # Replace & with AND, | with OR, ! with NOT (carefully to preserve == and !=)
+    # Use word boundaries or lookahead/lookbehind to avoid mangling == and != operators
     expr_str = re.sub(r'(?<!=)&(?!=)', ' AND ', expr_str)  # & not preceded/followed by =
     expr_str = re.sub(r'(?<!=)\|(?!=)', ' OR ', expr_str)   # | not preceded/followed by =
+    expr_str = re.sub(r'!(?!=)', ' NOT ', expr_str)  # ! not followed by = (to preserve !=)
     
     try:
         # Parse the normalized expression using our tokenizer
@@ -84,8 +88,8 @@ def normalize_expression_syntax(expr_str: str) -> Expression:
 
 def _tokenize(expr_str: str) -> List[str]:
     """Tokenize expression string."""
-    # Pattern: operators, identifiers, numbers, parentheses
-    pattern = r'(\(|\)|AND|OR|NOT|==|!=|<=|>=|<|>|[a-zA-Z_][a-zA-Z0-9_]*|-?\d+)'
+    # Pattern: operators, identifiers, numbers, parentheses, and dot (for function calls like is.(...))
+    pattern = r'(\(|\)|AND|OR|NOT|==|!=|<=|>=|<|>|\.|[a-zA-Z_][a-zA-Z0-9_]*|-?\d+)'
     tokens = re.findall(pattern, expr_str, re.IGNORECASE)
     if not tokens:
         raise CSVParseError(f"No valid tokens in expression: {expr_str}")
@@ -144,13 +148,13 @@ def _parse_unary_expression(tokens: List[str], pos: int) -> tuple:
     if pos < len(tokens) and tokens[pos].upper() == 'NOT':
         pos += 1
         expr, pos = _parse_primary_expression(tokens, pos)
-        return UnaryExpression(expr), pos
+        return UnaryExpression(UnaryOperator.NOT, expr), pos
     
     return _parse_primary_expression(tokens, pos)
 
 
 def _parse_primary_expression(tokens: List[str], pos: int) -> tuple:
-    """Parse primary expression (literal, variable, or parenthesized)."""
+    """Parse primary expression (literal, variable, function call, or parenthesized)."""
     if pos >= len(tokens):
         raise CSVParseError("Unexpected end of expression")
     
@@ -169,9 +173,45 @@ def _parse_primary_expression(tokens: List[str], pos: int) -> tuple:
     if token.lstrip('-').isdigit():
         return Literal(int(token)), pos + 1
     
-    # Variable reference (identifier)
+    # Variable reference or function call (identifier)
     if re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', token):
-        return VariableReference(token), pos + 1
+        var_name = token
+        next_pos = pos + 1
+        
+        # Check for function call pattern: identifier.(...) like is.(variable)
+        if (next_pos < len(tokens) and tokens[next_pos] == '.' and
+            next_pos + 1 < len(tokens) and tokens[next_pos + 1] == '('):
+            # This is a function call
+            func_name = var_name
+            next_pos += 2  # Skip the '.' and '('
+            
+            # Parse function arguments
+            arguments = []
+            
+            # Check if the next token is a closing paren (no arguments)
+            if next_pos < len(tokens) and tokens[next_pos] != ')':
+                # Parse comma-separated arguments
+                while True:
+                    arg, next_pos = _parse_or_expression(tokens, next_pos)
+                    arguments.append(arg)
+                    
+                    if next_pos >= len(tokens):
+                        raise CSVParseError("Missing closing parenthesis in function call")
+                    
+                    if tokens[next_pos] == ')':
+                        break
+                    elif tokens[next_pos] == ',':
+                        next_pos += 1  # Skip comma, continue parsing
+                    else:
+                        raise CSVParseError(f"Expected ',' or ')' in function call, got '{tokens[next_pos]}'")
+            
+            if next_pos >= len(tokens) or tokens[next_pos] != ')':
+                raise CSVParseError("Missing closing parenthesis in function call")
+            
+            return FunctionCall(func_name, arguments), next_pos + 1
+        else:
+            # Regular variable reference
+            return VariableReference(var_name), next_pos
     
     raise CSVParseError(f"Unexpected token: {token}")
 

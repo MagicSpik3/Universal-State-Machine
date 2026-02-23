@@ -172,3 +172,26 @@ class UnaryExpression(Expression):
 
     operator: UnaryOperator
     operand: Expression
+
+
+@dataclass(frozen=True)
+class FunctionCall(Expression):
+    """
+    Represents a function call with arguments.
+    
+    Example:
+        is.(add2)  - Check if variable 'add2' is set
+    
+    Becomes:
+        FunctionCall(
+            function_name="is",
+            arguments=[VariableReference("add2")]
+        )
+    
+    Properties:
+        function_name: Name of the function (e.g., "is")
+        arguments: List of argument expressions
+    """
+
+    function_name: str
+    arguments: list  # List[Expression]

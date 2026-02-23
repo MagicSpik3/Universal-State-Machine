@@ -1,0 +1,57 @@
+variable,question,route,valid_response,multi,max_choices,apply_from,sheet,date_of_fix
+StartDat,ENTER DATE INTERVIEW WITH THIS HOUSEHOLD WAS STARTED,(hout < 1000),DATE,,,9999,Demographics,
+DateChk,"IS THIS: 1. THE FIRST TIME YOU’VE OPENED THIS QUESTIONIRE
+
+2. OR THE SECOND OR LATER TIME?
+
+ 
+
+5. EMERGENCY CODE IF COMPUTER’S DATE IS WRONG AT LATER CHECK",(hout < 1000),(DateChk == 1 | DateChk == 2 | DateChk ==5),,,2204,Demographics,
+intrtype,enter whether a telephone or face to face interview,(hout < 300),intrtype ==1| intrtype ==2 | intrtype ==-8,,,2204,Demographics,
+curstat,when we last interviewed you in [rstartdat or kite] the members of this household were….   can you tell me if they still live here or not?,((hout < 300 & wave>1) & (iSwitch != 4)),((curstat >0 & curstat <10) | curstat ==-8),,,2204,Demographics,
+movedwth,did this person move to the same new address/household as another person already coded?,(curstat ==3 | curstat==4 | curstat==5),((movedwth >0 & movedwth <18) | movedwth==-8),,,2204,Demographics,
+CountRes,ENTER COUNTRY WHERE NOW RESIDENT,(curstat == 8),STRING,,,2204,Demographics,
+knowdet1,which details are known of where this person has moved?,(curstat==3| curstat==4),((knowdet1>0 & knowdet1 <4) |knowdet1 ==-8),,,2204,Demographics,
+Add1,"What is the first line of the new address, please include the house number or me, and the me of the street or road?",(knowdet1 == 1),STRING,,,2204,Demographics,
+Add2,What is the second line of the new address?,(knowdet1 == 1),STRING,,,2204,Demographics,
+Add3,What is the third line of the new address?,(!is.(add2)),STRING,,,2204,Demographics,
+Add4,What is the fourth line of the new address?,(!is.(add3)),STRING,,,2204,Demographics,
+Distrct,And in which district is the new address?,(knowdet1 == 1),STRING,,,2204,Demographics,
+PstTwn,And in which town is the new address?,(knowdet1 == 1),STRING,,,2204,Demographics,
+PostCD,"If you know it, what is the postcode for this new address?",(knowdet1 ==1),STRING,,,2204,Demographics,
+surepstc,code for certainty of correct postcode,((knowdet1 == 1) & (iSwitch != 4)),(surepstc ==1 | surepstc ==2 | surepstc ==-8),,,2204,Demographics,
+TeleNumb,"PLEASE ENTER TELEPHONE NUMBER, INCLUDING STD CODE",(knowdet1 == 2),STRING,,,2204,Demographics,
+EmailAdd,PLEASE ENTER EMAIL ADDRESS,(knowdet1 == 3),STRING,,,2204,Demographics,
+hldstat,derived,(hout < 300),(hldstat >0 & hldstat <4),,,2204,Demographics,
+seal,"the household from last contact has been split as follows.
+this household:
+[this household 1]
+[new household 2]
+if no interview, please proceed to admin block and code out",(wave !=1),(seal==1|seal==2),,,2204,Demographics,
+me1,"Can I have your me please? (If Rme OR (KITE) me = empty - i.e. if new cohort) ;
+",(wave == 1 | is.(Rme)),STRING,,,2204,Demographics,
+me2,"What is the me of the second person?
+",(MoreNme1 == 1),STRING,,,2204,Demographics,
+me3,What is the me of the next person?,(MoreNme2 == 1),STRING,,,9999,Demographics,
+me4,What is the me of the next person?,(MoreNme3 == 1),STRING,,,9999,Demographics,
+me5,What is the me of the next person?,(MoreNme4 == 1),STRING,,,9999,Demographics,
+me6,What is the me of the next person?,(MoreNme5 == 1),STRING,,,9999,Demographics,
+me7,What is the me of the next person?,(MoreNme6 == 1),STRING,,,9999,Demographics,
+me8,What is the me of the next person?,(MoreNme7 == 1),STRING,,,9999,Demographics,
+me9,What is the me of the next person?,(MoreNme8 == 1),STRING,,,9999,Demographics,
+me10,What is the me of the next person?,(MoreNme9 == 1),STRING,,,9999,Demographics,
+me11,What is the me of the next person?,(MoreNme10 == 1),STRING,,,9999,Demographics,
+me12,What is the me of the next person?,(MoreNme11 == 1),STRING,,,9999,Demographics,
+me13,What is the me of the next person?,(MoreNme12 == 1),STRING,,,9999,Demographics,
+me14,What is the me of the next person?,(MoreNme13 == 1),STRING,,,9999,Demographics,
+me15,What is the me of the next person?,(MoreNme14 == 1),STRING,,,9999,Demographics,
+me16,What is the me of the next person?,(MoreNme15 == 1),STRING,,,9999,Demographics,
+Corrm,S THIS ME CORRECT?,(!is.(Rme)),STRING,,,2204,Demographics,
+Corrm2,S THIS ME CORRECT?,(!is.(Rme2)),STRING,,,2204,Demographics,
+Corrm3,S THIS ME CORRECT?,(!is.(Rme3)),STRING,,,2204,Demographics,
+Corrm4,S THIS ME CORRECT?,(!is.(Rme4)),STRING,,,2204,Demographics,
+Corrm5,S THIS ME CORRECT?,(!is.(Rme5)),STRING,,,2204,Demographics,
+Corrm6,S THIS ME CORRECT?,(!is.(Rme6)),STRING,,,2204,Demographics,
+Corrm7,S THIS ME CORRECT?,(!is.(Rme7)),STRING,,,2204,Demographics,
+Corrm8,S THIS ME CORRECT?,(!is.(Rme8)),STRING,,,2204,Demographics,
+Corrm9,S THIS ME CORRECT?,(!is.(Rme9)),STRING,,,2204,Demographics,
