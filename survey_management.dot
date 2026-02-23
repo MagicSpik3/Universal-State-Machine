@@ -4,9 +4,9 @@ digraph survey {
   edge [style=solid];
   START [shape=ellipse, fillcolor=lightgreen, label="START"];
   StartDat [label="ENTER DATE INTERVIEW WITH THIS HOUSEHOLD WAS STARTED"];
-  DateChk [label="IS THIS: 1. THE FIRST TIME YOUâ€™VE OPENED THIS QUESTIONIRE\\n\\n2. OR THE SECOND OR LATER TIME?\\n\\n \\n\\n5. EMERGENCY CODE IF COMPUTERâ€™S DATE IS WRONG AT LATER CHECK"];
+  DateChk [label="IS THIS: 1. THE FIRST TIME YOU’VE OPENED THIS QUESTIONIRE\\n\\n2. OR THE SECOND OR LATER TIME?\\n\\n \\n\\n5. EMERGENCY CODE IF COMPUTER’S DATE IS WRONG AT LATER CHECK"];
   intrtype [label="enter whether a telephone or face to face interview"];
-  curstat [label="when we last interviewed you in [rstartdat or kite] the members of this household wereâ€¦.   can you tell me if they still live here or not?"];
+  curstat [label="when we last interviewed you in [rstartdat or kite] the members of this household were….   can you tell me if they still live here or not?"];
   movedwth [label="did this person move to the same new address/household as another person already coded?"];
   CountRes [label="ENTER COUNTRY WHERE NOW RESIDENT"];
   "knowdet1" [label="which details are known of where this person has moved?"];

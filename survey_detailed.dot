@@ -3,9 +3,9 @@ digraph survey {
   node [shape=box, style=filled, fillcolor=lightblue];
   START [shape=ellipse, fillcolor=lightgreen, label="START"];
   StartDat [label="ENTER DATE INTERVIEW WITH THIS HOUSEHOLD WAS STARTED\\n(Guard: (hout < 1000)\\nValid: DATE\\nFrom: 9999)"];
-  DateChk [label="IS THIS: 1. THE FIRST TIME YOUâ€™VE OPENED THIS QUESTIONIRE\\n\\n2. OR THE SECOND OR LATER TIME?\\n\\n \\n\\n5. EMERGENCY CODE IF COMPUTERâ€™S DATE IS WRONG AT LATER CHECK\\n(Guard: (hout < 1000)\\nValid: (((DateChk == 1) OR (DateChk == 2)) OR (DateChk == 5))\\nFrom: 2204)"];
+  DateChk [label="IS THIS: 1. THE FIRST TIME YOU’VE OPENED THIS QUESTIONIRE\\n\\n2. OR THE SECOND OR LATER TIME?\\n\\n \\n\\n5. EMERGENCY CODE IF COMPUTER’S DATE IS WRONG AT LATER CHECK\\n(Guard: (hout < 1000)\\nValid: (((DateChk == 1) OR (DateChk == 2)) OR (DateChk == 5))\\nFrom: 2204)"];
   intrtype [label="enter whether a telephone or face to face interview\\n(Guard: (hout < 300)\\nValid: (((intrtype == 1) OR (intrtype == 2)) OR (intrtype == -8))\\nFrom: 2204)"];
-  curstat [label="when we last interviewed you in [rstartdat or kite] the members of this household wereâ€¦.   can you tell me if they still live here or not?\\n(Guard: (((hout < 300) AND (wave > 1)) AND (iSwitch != 4))\\nValid: (((curstat > 0) AND (curstat < 10)) OR (curstat == -8))\\nFrom: 2204)"];
+  curstat [label="when we last interviewed you in [rstartdat or kite] the members of this household were….   can you tell me if they still live here or not?\\n(Guard: (((hout < 300) AND (wave > 1)) AND (iSwitch != 4))\\nValid: (((curstat > 0) AND (curstat < 10)) OR (curstat == -8))\\nFrom: 2204)"];
   movedwth [label="did this person move to the same new address/household as another person already coded?\\n(Guard: (((curstat == 3) OR (curstat == 4)) OR (curstat == 5))\\nValid: (((movedwth > 0) AND (movedwth < 18)) OR (movedwth == -8))\\nFrom: 2204)"];
   CountRes [label="ENTER COUNTRY WHERE NOW RESIDENT\\n(Guard: (curstat == 8)\\nValid: STRING\\nFrom: 2204)"];
   "knowdet1" [label="which details are known of where this person has moved?\\n(Guard: ((curstat == 3) OR (curstat == 4))\\nValid: (((knowdet1 > 0) AND (knowdet1 < 4)) OR (knowdet1 == -8))\\nFrom: 2204)"];
