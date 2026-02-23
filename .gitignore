@@ -3,7 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Stuff I don't want to upload
+*.dot
 *.csv
+*.txt
 # C extensions
 *.so
 

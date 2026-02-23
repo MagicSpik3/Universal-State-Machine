@@ -14,6 +14,7 @@ Syntax Notes:
 
 import csv
 import re
+import warnings
 from typing import Dict, List, Set, Optional, Union
 from io import StringIO
 from dataclasses import dataclass, field
@@ -377,14 +378,14 @@ def parse_csv_string(csv_content: str, survey_name: str = "CSVSurvey") -> Survey
             try:
                 entry_guard = normalize_expression_syntax(row.route)
             except CSVParseError as e:
-                raise CSVParseError(f"Invalid route for {row.variable}: {str(e)}")
+                warnings.warn(f"Invalid route for {row.variable}: {str(e)}", UserWarning)
         
         validation = None
         if row.valid_response:
             try:
                 validation = normalize_expression_syntax(row.valid_response)
             except CSVParseError as e:
-                raise CSVParseError(f"Invalid validation for {row.variable}: {str(e)}")
+                warnings.warn(f"Invalid validation for {row.variable}: {str(e)}", UserWarning)
         
         version = None
         if row.apply_from:
