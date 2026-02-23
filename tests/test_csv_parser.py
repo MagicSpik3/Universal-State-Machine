@@ -25,6 +25,8 @@ from cslm.expressions import (
     BinaryOperator,
     VariableReference,
     Literal,
+    UnaryExpression,
+    UnaryOperator,
 )
 from cslm.model import Survey
 
@@ -318,3 +320,102 @@ Q,"Test?",,(Q == 1 | Q == -8),,,2024'''
         survey = parse_csv_string(csv)
         state = survey.get_state("Q")
         assert state.validation is not None
+
+
+class TestRoutingUpliftExpressions:
+    """Test expressions from routing_uplift.csv to cover real-world scenarios."""
+    
+    def test_decimal_literals(self):
+        """Handle decimal numbers like 0.00 in expressions."""
+        expr_str = "(rentexpam >=0.00 & rentexpam <99997.00) | rentexpam==-8"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, BinaryExpression)
+        # Should parse without error
+        assert result is not None
+    
+    def test_equality_operator_conversion(self):
+        """Convert single = to == in expressions."""
+        expr_str = "(MNeg1 = 0)"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, BinaryExpression)
+        assert result.operator == BinaryOperator.EQUALS
+    
+    def test_complex_nested_expression(self):
+        """Parse complex nested expression with multiple levels."""
+        expr_str = "((((MNegB1 >=1 & MNegB1 <15) | MNegB1 ==-8) & MNeg1 != 1) | (MNeg1 == 0))"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, BinaryExpression)
+        assert result is not None
+    
+    def test_function_call_expression(self):
+        """Handle function calls like is.(variable)."""
+        expr_str = "(!is.(add2))"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, UnaryExpression)
+        assert result.operator == UnaryOperator.NOT
+    
+    def test_large_numbers(self):
+        """Handle very large numbers in expressions."""
+        expr_str = "(RentIncLdg > 0.00 & RentIncLdg < 9999997.00)"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, BinaryExpression)
+        assert result is not None
+    
+    def test_mixed_operators(self):
+        """Expressions with ==, !=, <, >, etc."""
+        expr_str = "(curstat >0 & curstat <10) | curstat ==-8"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, BinaryExpression)
+        assert result is not None
+    
+    def test_parenthesized_or_and(self):
+        """Complex expressions with both OR and AND."""
+        expr_str = "((hout < 300 & wave>1) & (iSwitch != 4))"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, BinaryExpression)
+        assert result is not None
+    
+    def test_string_validation(self):
+        """Validation expressions with STRING type."""
+        csv = '''variable,question,route,valid_response,multi,max_choices,apply_from
+EmailAdd,PLEASE ENTER EMAIL ADDRESS,(knowdet1 == 3),STRING,,,2204'''
+        
+        survey = parse_csv_string(csv)
+        state = survey.get_state("EmailAdd")
+        assert isinstance(state.validation, VariableReference)
+        assert state.validation.name == "STRING"
+    
+    def test_date_validation(self):
+        """DATE type validation."""
+        csv = '''variable,question,route,valid_response,multi,max_choices,apply_from
+StartDat,ENTER DATE,(hout < 1000),DATE,,,9999'''
+        
+        survey = parse_csv_string(csv)
+        state = survey.get_state("StartDat")
+        assert isinstance(state.validation, VariableReference)
+        assert state.validation.name == "DATE"
+    
+    def test_malformed_expression_missing_parenthesis(self):
+        """Test error handling for malformed expressions."""
+        expr_str = "((rentexpam >=0.00 & rentexpam <99997.00) | rentexpam==-8"  # Missing closing )
+        with pytest.raises(CSVParseError):
+            normalize_expression_syntax(expr_str)
+    
+    def test_invalid_operator(self):
+        """Invalid operators should raise error."""
+        expr_str = "(X INVALID Y)"
+        with pytest.raises(CSVParseError):
+            normalize_expression_syntax(expr_str)
+    
+    def test_unmatched_parentheses(self):
+        """Unmatched parentheses should raise error."""
+        expr_str = "(X == 1"
+        with pytest.raises(CSVParseError):
+            normalize_expression_syntax(expr_str)
+    
+    def test_nested_function_calls(self):
+        """Multiple nested function calls."""
+        expr_str = "(!is.(Rme) | !is.(Rme2))"
+        result = normalize_expression_syntax(expr_str)
+        assert isinstance(result, BinaryExpression)
+        assert result is not None

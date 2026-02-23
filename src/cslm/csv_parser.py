@@ -72,11 +72,12 @@ def normalize_expression_syntax(expr_str: str) -> Expression:
     expr_str = re.sub(r'(?<!=)&(?!=)', ' AND ', expr_str)  # & not preceded/followed by =
     expr_str = re.sub(r'(?<!=)\|(?!=)', ' OR ', expr_str)   # | not preceded/followed by =
     expr_str = re.sub(r'!(?!=)', ' NOT ', expr_str)  # ! not followed by = (to preserve !=)
+    expr_str = re.sub(r'(?<![\!<>=])=(?![\!<>=])', ' == ', expr_str)  # = not part of == != <= >=
     
     try:
         # Parse the normalized expression using our tokenizer
         tokens = _tokenize(expr_str)
-        ast, remaining = _parse_or_expression(tokens, 0)
+        ast, remaining = _parse_and_expression(tokens, 0)
         
         if remaining < len(tokens):
             raise CSVParseError(f"Unexpected tokens after parsing: {tokens[remaining:]}")
@@ -89,7 +90,7 @@ def normalize_expression_syntax(expr_str: str) -> Expression:
 def _tokenize(expr_str: str) -> List[str]:
     """Tokenize expression string."""
     # Pattern: operators, identifiers, numbers, parentheses, and dot (for function calls like is.(...))
-    pattern = r'(\(|\)|AND|OR|NOT|==|!=|<=|>=|<|>|\.|[a-zA-Z_][a-zA-Z0-9_]*|-?\d+)'
+    pattern = r'(\(|\)|AND|OR|NOT|==|!=|<=|>=|<|>|\.|[a-zA-Z_][a-zA-Z0-9_]*|-?(?:\d+(?:\.\d*)?|\.\d+))'
     tokens = re.findall(pattern, expr_str, re.IGNORECASE)
     if not tokens:
         raise CSVParseError(f"No valid tokens in expression: {expr_str}")
@@ -97,24 +98,24 @@ def _tokenize(expr_str: str) -> List[str]:
 
 
 def _parse_or_expression(tokens: List[str], pos: int) -> tuple:
-    """Parse OR expression (lowest precedence)."""
-    left, pos = _parse_and_expression(tokens, pos)
+    """Parse OR expression."""
+    left, pos = _parse_comparison_expression(tokens, pos)
     
     while pos < len(tokens) and tokens[pos].upper() == 'OR':
         pos += 1
-        right, pos = _parse_and_expression(tokens, pos)
+        right, pos = _parse_comparison_expression(tokens, pos)
         left = BinaryExpression(BinaryOperator.OR, left, right)
     
     return left, pos
 
 
 def _parse_and_expression(tokens: List[str], pos: int) -> tuple:
-    """Parse AND expression."""
-    left, pos = _parse_comparison_expression(tokens, pos)
+    """Parse AND expression (lowest precedence)."""
+    left, pos = _parse_or_expression(tokens, pos)
     
     while pos < len(tokens) and tokens[pos].upper() == 'AND':
         pos += 1
-        right, pos = _parse_comparison_expression(tokens, pos)
+        right, pos = _parse_or_expression(tokens, pos)
         left = BinaryExpression(BinaryOperator.AND, left, right)
     
     return left, pos
@@ -163,15 +164,15 @@ def _parse_primary_expression(tokens: List[str], pos: int) -> tuple:
     # Parenthesized expression
     if token == '(':
         pos += 1
-        expr, pos = _parse_or_expression(tokens, pos)
+        expr, pos = _parse_and_expression(tokens, pos)
         if pos >= len(tokens) or tokens[pos] != ')':
             raise CSVParseError("Missing closing parenthesis")
         pos += 1
         return expr, pos
     
     # Numeric literal
-    if token.lstrip('-').isdigit():
-        return Literal(int(token)), pos + 1
+    if re.match(r'^-?(\d+(\.\d*)?|\.\d+)$', token):
+        return Literal(float(token)), pos + 1
     
     # Variable reference or function call (identifier)
     if re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', token):
